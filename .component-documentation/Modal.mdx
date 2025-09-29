@@ -1,0 +1,868 @@
+import { Meta, Story, Controls, Canvas, ArgTypes } from '@storybook/blocks';
+import * as ModalStories from './Modal.stories';
+import { Modal } from './Modal';
+import { Button } from '../Button/Button';
+
+<Meta of={ModalStories} />
+
+
+REALM AGENT NAVIGATION INDEX
+=============================
+Quick Reference for Claude Code Agents:
+
+📦 IMPORT & SETUP (Lines 16-25)
+- Basic import pattern
+- Props documentation
+
+🎯 BASIC USAGE (Lines 26-41)
+- Default modal implementation
+- Trigger and content setup
+
+🎭 MODAL VARIANTS (Lines 43-64)
+- Default modal with all options
+- Title and footer configuration
+
+📐 CONTENT PADDING (Lines 66-116)
+- Default Padding (Lines 70-84): --t-space-500
+- Custom Padding (Lines 86-100): Custom design tokens
+- No Padding (Lines 102-116): Zero padding for custom layouts
+
+📏 WIDTH SIZES (Lines 118-214)
+- Small (Lines 122-138): 424px/26.5rem for confirmations
+- Medium (Lines 140-156): 620px/38.75rem default
+- Large (Lines 158-174): 980px/61.25rem for complex content
+- Custom Width (Lines 176-193): Specific dimensions
+- Min/Max Constraints (Lines 195-214): Responsive behavior
+
+🎛️ HEADER/FOOTER CONTROL (Lines 216-249)
+- Without Title (Lines 216-232): Hide title bar
+- Without Footer (Lines 234-249): Hide action buttons
+
+🦶 FOOTER VARIANTS (Lines 252-375)
+- Cancel and Actions (Lines 256-280): Default layout
+- Swap and Actions (Lines 282-304): Custom left area
+- Actions Only (Lines 306-328): Right-aligned buttons
+- Single Button (Lines 330-352): Show/hide individual buttons
+- Custom Swap Content (Lines 354-375): Custom left content
+
+🌍 INTERNATIONALIZATION & RTL (Lines 379-540)
+- ThemeProvider Integration (Lines 383-400): Complete RTL setup
+- Automatic RTL Adjustments (Lines 402-415): Font switching & layout
+- Directional Icon Handling (Lines 417-442): Header/footer icons
+- Arabic Content Example (Lines 444-462): Complete RTL example
+- RTL Detection Methods (Lines 464-482): Auto/manual methods
+- RTL Best Practices (Lines 484-540): Implementation guidelines
+
+💼 USE CASES (Lines 542-634)
+- Confirmation Dialog (Lines 544-559): Delete confirmations
+- Form Modal (Lines 561-607): User input forms
+- Information Display (Lines 609-634): Read-only content
+
+🔗 COMPONENT INTEGRATION (Lines 636-744)
+- Select Components (Lines 638-684): Z-index management
+- Dynamic Footer Control (Lines 686-714): Runtime configuration
+- Form Integration (Lines 716-744): Multiple form components
+
+♿ ACCESSIBILITY (Lines 746-758)
+- Radix UI foundation
+- Focus management and keyboard navigation
+- ARIA attributes and screen reader support
+
+⚙️ TECHNICAL DETAILS (Lines 760-813)
+- CSS Variables (Lines 762-784): Design tokens and z-index
+- Architecture (Lines 786-799): Radix UI foundation
+- Animations (Lines 801-809): Smooth transitions
+- Browser Support (Lines 811-813)
+
+QUICK IMPLEMENTATION EXAMPLES:
+- Basic modal: Lines 109-122
+- Different widths: Lines 207-219, 225-237, 243-255
+- Footer variants: Lines 341-361, 367-385, 391-409
+- RTL support: Lines 459-479
+- With Select: Lines 658-675
+
+⚠️ FALLBACK INSTRUCTION:
+If you cannot find what you're looking for in the sections above, 
+read the ENTIRE document from start to finish to ensure complete 
+understanding of all Modal component capabilities and patterns.
+
+
+# Modal Component
+
+The Modal component is a dialog that appears on top of the main content to provide critical information or request user input.
+
+## Overview
+
+Modals are used to focus user attention on a specific task or piece of information without navigating away from the current screen. They're ideal for confirmations, alerts, and short forms.
+
+## Import
+
+```jsx
+import { Modal } from '@tagaddod/react';
+```
+
+## Props
+
+<ArgTypes of={Modal} />
+
+## Basic Usage
+
+<Canvas of={ModalStories.Default} />
+
+```jsx
+import { Modal, Button } from '@tagaddod/react';
+
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Modal Title"
+>
+  <div style={{ textAlign: 'center', padding: '16px' }}>
+    Modal content goes here
+  </div>
+</Modal>
+```
+
+## Modal Variants
+
+### Default Modal
+
+<Canvas of={ModalStories.Default} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Modal Title"
+  showTitle={true}
+  showFooter={true}
+  cancelLabel="Cancel"
+  confirmLabel="Confirm"
+  onCancel={() => console.log('Cancelled')}
+  onConfirm={() => console.log('Confirmed')}
+>
+  <div style={{ padding: '16px' }}>
+    Modal content goes here
+  </div>
+</Modal>
+```
+
+## Content Padding
+
+The Modal content area has customizable padding using design tokens. The default value is `--t-space-500`.
+
+### Default Content Padding
+
+<Canvas of={ModalStories.Default} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Default Padding"
+  // contentPadding="var(--t-space-500)" (default)
+>
+  <div>
+    Content with default padding (--t-space-500)
+  </div>
+</Modal>
+```
+
+### Custom Content Padding
+
+<Canvas of={ModalStories.CustomContentPadding} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Custom Padding"
+  contentPadding="var(--t-space-700)"
+>
+  <div>
+    Content with larger padding (--t-space-700)
+  </div>
+</Modal>
+```
+
+### No Content Padding
+
+<Canvas of={ModalStories.NoContentPadding} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="No Padding"
+  contentPadding="0"
+>
+  <div style={{ padding: '16px', backgroundColor: '#f0f0f0' }}>
+    Content with no default padding - you can apply your own
+  </div>
+</Modal>
+```
+
+## Width Sizes
+
+The Modal component supports different width sizes to accommodate various content types and use cases.
+
+### Small Width (424px / 26.5rem)
+
+Perfect for simple confirmations and alerts.
+
+<Canvas of={ModalStories.SmallWidth} />
+
+```jsx
+<Modal
+  width="small"
+  trigger={<Button>Open Small Modal</Button>}
+  title="Small Modal"
+>
+  <div style={{ padding: '16px' }}>
+    This is a small modal perfect for confirmations.
+  </div>
+</Modal>
+```
+
+### Medium Width (620px / 38.75rem)
+
+The default width, ideal for most modal content.
+
+<Canvas of={ModalStories.MediumWidth} />
+
+```jsx
+<Modal
+  width="medium"
+  trigger={<Button>Open Medium Modal</Button>}
+  title="Medium Modal"
+>
+  <div style={{ padding: '16px' }}>
+    This is a medium modal suitable for forms and detailed content.
+  </div>
+</Modal>
+```
+
+### Large Width (980px / 61.25rem)
+
+For complex forms, data tables, or rich content.
+
+<Canvas of={ModalStories.LargeWidth} />
+
+```jsx
+<Modal
+  width="large"
+  trigger={<Button>Open Large Modal</Button>}
+  title="Large Modal"
+>
+  <div style={{ padding: '16px' }}>
+    This is a large modal perfect for complex content like forms or data tables.
+  </div>
+</Modal>
+```
+
+### Custom Width
+
+Use custom width with specific dimensions or percentages.
+
+<Canvas of={ModalStories.CustomWidth} />
+
+```jsx
+<Modal
+  width="custom"
+  customWidth="50rem"
+  trigger={<Button>Open Custom Width Modal</Button>}
+  title="Custom Width Modal"
+>
+  <div style={{ padding: '16px' }}>
+    This modal has a custom width of 50rem.
+  </div>
+</Modal>
+```
+
+### With Min/Max Width Constraints
+
+Control the responsive behavior with minimum and maximum width constraints.
+
+<Canvas of={ModalStories.WithMinMaxWidth} />
+
+```jsx
+<Modal
+  width="custom"
+  customWidth="70%"
+  minWidth="20rem"
+  maxWidth="60rem"
+  trigger={<Button>Open Modal with Min/Max Width</Button>}
+  title="Responsive Modal"
+>
+  <div style={{ padding: '16px' }}>
+    This modal has a responsive width of 70% with min/max constraints.
+  </div>
+</Modal>
+```
+
+### Without Title
+
+<Canvas of={ModalStories.WithoutTitle} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  showTitle={false}
+  showFooter={true}
+  cancelLabel="Cancel"
+  confirmLabel="Confirm"
+>
+  <div style={{ padding: '16px' }}>
+    Modal without a title bar
+  </div>
+</Modal>
+```
+
+### Without Footer
+
+<Canvas of={ModalStories.WithoutFooter} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Modal Without Footer"
+  showTitle={true}
+  showFooter={false}
+>
+  <div style={{ padding: '16px' }}>
+    Modal without action buttons in footer
+  </div>
+</Modal>
+```
+
+
+## Footer Variants
+
+The Modal component supports three footer variants to handle different use cases and layouts.
+
+### Cancel and Actions Footer
+
+The default variant with a cancel button on the left and action buttons on the right. The cancel button uses a plain variant with neutral tone.
+
+<Canvas of={ModalStories.CancelAndActions} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Cancel & Actions Footer"
+  footerVariant="cancelAndActions"
+  cancelLabel="Cancel"
+  primaryLabel="Save"
+  secondaryLabel="Draft"
+  showPrimaryButton={true}
+  showSecondaryButton={true}
+  onCancel={() => console.log('Cancelled')}
+  onPrimary={() => console.log('Primary action')}
+  onSecondary={() => console.log('Secondary action')}
+>
+  <div style={{ padding: '16px' }}>
+    Modal with cancel button and action buttons
+  </div>
+</Modal>
+```
+
+### Swap Area and Actions Footer
+
+A variant with a customizable swap area on the left and action buttons on the right. Perfect for displaying additional information or controls.
+
+<Canvas of={ModalStories.SwapAndActions} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Swap & Actions Footer"
+  footerVariant="swapAndActions"
+  primaryLabel="Save"
+  secondaryLabel="Draft"
+  showPrimaryButton={true}
+  showSecondaryButton={true}
+  onPrimary={() => console.log('Primary action')}
+  onSecondary={() => console.log('Secondary action')}
+>
+  <div style={{ padding: '16px' }}>
+    Modal with swap area and action buttons
+  </div>
+</Modal>
+```
+
+### Actions Only Footer
+
+A minimal variant with only action buttons aligned to the right. No additional elements on the left side.
+
+<Canvas of={ModalStories.ActionsOnly} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Actions Only Footer"
+  footerVariant="actionsOnly"
+  primaryLabel="Save"
+  secondaryLabel="Draft"
+  showPrimaryButton={true}
+  showSecondaryButton={true}
+  onPrimary={() => console.log('Primary action')}
+  onSecondary={() => console.log('Secondary action')}
+>
+  <div style={{ padding: '16px' }}>
+    Modal with only action buttons
+  </div>
+</Modal>
+```
+
+### Single Button
+
+You can show or hide individual buttons using the `showPrimaryButton` and `showSecondaryButton` props.
+
+<Canvas of={ModalStories.SingleButton} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Single Button"
+  footerVariant="cancelAndActions"
+  cancelLabel="Cancel"
+  primaryLabel="Save"
+  showPrimaryButton={true}
+  showSecondaryButton={false}
+  onCancel={() => console.log('Cancelled')}
+  onPrimary={() => console.log('Primary action')}
+>
+  <div style={{ padding: '16px' }}>
+    Modal with single action button
+  </div>
+</Modal>
+```
+
+### Custom Swap Content
+
+When using the `swapAndActions` variant, you can provide custom content for the swap area.
+
+<Canvas of={ModalStories.CustomSwapContent} />
+
+```jsx
+<Modal
+  trigger={<Button>Open Modal</Button>}
+  title="Custom Swap Content"
+  footerVariant="swapAndActions"
+  swapContent={<span style={{ color: 'blue', fontWeight: 'bold' }}>Custom Content</span>}
+  primaryLabel="Save"
+  secondaryLabel="Draft"
+  showPrimaryButton={true}
+  showSecondaryButton={true}
+>
+  <div style={{ padding: '16px' }}>
+    Modal with custom swap area content
+  </div>
+</Modal>
+```
+
+
+
+## Internationalization and RTL Support
+
+The Modal component provides comprehensive Right-to-Left (RTL) language support when used with the `ThemeProvider`. This includes automatic font switching, proper close button positioning, header layout adjustment, and directional button handling.
+
+### Using with ThemeProvider
+
+For full RTL support, wrap your application with `ThemeProvider`:
+
+```jsx
+import { ThemeProvider, Modal, Button } from '@tagaddod-design/react';
+import { IconX, IconArrowLeft } from '@tabler/icons-react';
+
+function App() {
+  return (
+    <ThemeProvider defaultDirection="rtl" defaultLocale="ar">
+      <Modal
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        title="عنوان النافذة"
+        cancelLabel="إلغاء"
+        primaryLabel="تأكيد"
+      >
+        <p>محتوى النافذة باللغة العربية</p>
+      </Modal>
+    </ThemeProvider>
+  );
+}
+```
+
+### Automatic RTL Adjustments
+
+When RTL is enabled via ThemeProvider, the Modal component automatically:
+
+1. **Font Switching**: Changes from Outfit (English) to Tajawal (Arabic) font
+2. **Header Layout**: Adjusts title and close button positioning for RTL flow
+3. **Line Height**: Applies appropriate line height for Arabic text rendering
+4. **Close Button Position**: Repositions close button from top-right to top-left
+5. **Content Direction**: Ensures modal content follows RTL text direction
+6. **Footer Layout**: Repositions footer buttons for RTL reading patterns
+7. **Animation Direction**: Modal entrance/exit animations respect RTL
+
+### Directional Icon Handling
+
+**Important**: When using directional icons in Modal headers or action buttons, choose appropriate icons based on direction:
+
+```jsx
+import { useTheme } from '@tagaddod-design/react';
+import { IconArrowLeft, IconArrowRight, IconX, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+
+function DirectionalModal() {
+  const { isRTL } = useTheme();
+  
+  // Back/navigation arrows should point in reading direction
+  const BackIcon = isRTL ? IconArrowRight : IconArrowLeft;
+  const ForwardIcon = isRTL ? IconArrowLeft : IconArrowRight;
+  
+  return (
+    <Modal
+      title={isRTL ? 'إعدادات المستخدم' : 'User Settings'}
+      primaryLabel={isRTL ? 'التالي' : 'Next'}
+      secondaryLabel={isRTL ? 'رجوع' : 'Back'}
+      // Custom action buttons with proper directional icons
+      onPrimary={() => console.log('Next step')}
+      onSecondary={() => console.log('Previous step')}
+    >
+      <div>
+        <p>{isRTL ? 'محتوى الإعدادات' : 'Settings content'}</p>
+        {/* Use directional icons in content */}
+        <button>
+          <BackIcon size={16} />
+          {isRTL ? 'العودة إلى القائمة' : 'Back to menu'}
+        </button>
+      </div>
+    </Modal>
+  );
+}
+```
+
+### Arabic Content Example
+
+<Canvas of={ModalStories.ArabicContent} />
+
+```jsx
+<Modal
+  trigger={<Button>فتح النافذة</Button>}
+  title="تأكيد العملية"
+  footerVariant="cancelAndActions"
+  cancelLabel="إلغاء"
+  primaryLabel="تأكيد"
+  secondaryLabel="حفظ المسودة"
+  showPrimaryButton={true}
+  showSecondaryButton={true}
+>
+  <div style={{ padding: '16px', textAlign: 'right', direction: 'rtl' }}>
+    <h3>هل أنت متأكد من أنك تريد حذف هذا العنصر؟</h3>
+    <p>لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع البيانات المرتبطة بهذا العنصر نهائياً.</p>
+  </div>
+</Modal>
+```
+
+### RTL Detection Methods
+
+The Modal automatically detects RTL direction from multiple sources:
+
+1. **ThemeProvider Context**: Recommended approach using `useTheme()` hook
+2. **Document Direction**: Detects `document.dir = 'rtl'` or `document.documentElement.dir = 'rtl'`
+3. **RTL Prop**: Explicitly pass `rtl={true}` for manual control
+4. **Storybook Toolbar**: Uses direction toggle in development
+
+```jsx
+// Method 1: ThemeProvider (Recommended)
+<ThemeProvider defaultDirection="rtl">
+  <Modal title="العنوان">Content</Modal>
+</ThemeProvider>
+
+// Method 2: Document-level
+document.dir = 'rtl';
+<Modal title="العنوان">Content</Modal>
+
+// Method 3: Component prop
+<Modal rtl={true} title="العنوان">Content</Modal>
+```
+
+### RTL Best Practices
+
+1. **Always use ThemeProvider** for proper RTL support and font switching
+2. **Position close button correctly** - automatically handled by Modal component
+3. **Test modal animations** in RTL to ensure smooth transitions
+4. **Use appropriate directional icons** in footer action buttons and content
+5. **Consider modal sizing** - Arabic text may require different width/height adjustments
+6. **Test nested components** - ensure all modal content supports RTL properly
+7. **Verify footer layouts** - different footer variants behave correctly in RTL
+8. **Test form integration** - ensure form elements align properly in RTL modals
+9. **Check z-index behavior** - RTL modals maintain proper layering with other components
+10. **Validate accessibility** - screen readers work correctly with RTL content and navigation
+
+## Use Cases
+
+### Confirmation Dialog
+
+```jsx
+<Modal
+  trigger={<Button tone="critical">Delete Item</Button>}
+  title="Confirm Deletion"
+  cancelLabel="Cancel"
+  confirmLabel="Delete"
+  onCancel={() => console.log('Cancelled deletion')}
+  onConfirm={() => handleDelete()}
+>
+  <div style={{ padding: '16px' }}>
+    Are you sure you want to delete this item? This action cannot be undone.
+  </div>
+</Modal>
+```
+
+### Form Modal
+
+```jsx
+function FormModal() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  
+  const handleSubmit = () => {
+    // Form submission logic
+    console.log({ name, email });
+  };
+  
+  return (
+    <Modal
+      trigger={<Button>Add User</Button>}
+      title="Add New User"
+      cancelLabel="Cancel"
+      confirmLabel="Save"
+      onConfirm={handleSubmit}
+    >
+      <div style={{ padding: '16px' }}>
+        <form>
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="name">Name</label>
+            <input 
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={{ display: 'block', width: '100%', marginTop: '4px', padding: '8px' }}
+            />
+          </div>
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="email">Email</label>
+            <input 
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ display: 'block', width: '100%', marginTop: '4px', padding: '8px' }}
+            />
+          </div>
+        </form>
+      </div>
+    </Modal>
+  );
+}
+```
+
+### Information Display
+
+```jsx
+<Modal
+  trigger={<Button>View Details</Button>}
+  title="User Details"
+  showFooter={false}
+>
+  <div style={{ padding: '16px' }}>
+    <h3>John Doe</h3>
+    <div>
+      <strong>Email:</strong> john.doe@example.com
+    </div>
+    <div>
+      <strong>Role:</strong> Administrator
+    </div>
+    <div>
+      <strong>Joined:</strong> January 15, 2023
+    </div>
+    
+    <div style={{ marginTop: '24px', textAlign: 'right' }}>
+      <Button variant="secondary" onClick={() => console.log('Close')}>Close</Button>
+    </div>
+  </div>
+</Modal>
+```
+
+## Using with Other Components
+
+### Select Components in Modals
+
+The Modal component has been enhanced to work seamlessly with Select components through automatic z-index management. When a Modal is opened from within a Drawer, it receives a higher z-index to ensure proper layering hierarchy.
+
+<Canvas of={ModalStories.FormWithSelect} />
+
+```jsx
+import { Modal, Select, Button } from '@tagaddod/react';
+
+const ModalWithSelect = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('');
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+  ];
+
+  return (
+    <Modal 
+      open={isOpen} 
+      onOpenChange={setIsOpen}
+      trigger={<Button>Open Modal with Select</Button>}
+      title="Form with Select"
+    >
+      <div style={{ padding: '16px' }}>
+        <Select
+          label="Choose an option"
+          placeholder="Select an option..."
+          options={options}
+          value={selectedValue}
+          onValueChange={setSelectedValue}
+        />
+      </div>
+    </Modal>
+  );
+};
+```
+
+**Key Features:**
+- **Automatic Z-Index Handling**: Select dropdowns automatically appear above modal overlays using maximum z-index
+- **Drawer Context Awareness**: When opened from within a Drawer, Modal automatically uses higher z-index (`--t-z-drawer-modal: 1070`)
+- **No Additional Configuration**: Works out of the box without any special setup
+- **Proper Focus Management**: Focus handling works correctly between modal and select
+- **RTL Support**: Both components work together properly in RTL layouts
+
+### Dynamic Footer Control
+
+<Canvas of={ModalStories.DynamicFooter} />
+
+The Modal component supports dynamic footer configuration, allowing you to show/hide buttons and change footer variants in real-time:
+
+```jsx
+const DynamicModal = () => {
+  const [footerConfig, setFooterConfig] = useState({
+    showCancel: true,
+    showSecondary: true,
+    showPrimary: true,
+    footerVariant: 'cancelAndActions'
+  });
+
+  return (
+    <Modal
+      title="Dynamic Footer Control"
+      footerVariant={footerConfig.footerVariant}
+      cancelLabel={footerConfig.showCancel ? "Cancel" : undefined}
+      primaryLabel={footerConfig.showPrimary ? "Save" : undefined}
+      secondaryLabel={footerConfig.showSecondary ? "Draft" : undefined}
+      showPrimaryButton={footerConfig.showPrimary}
+      showSecondaryButton={footerConfig.showSecondary}
+    >
+      {/* Modal content */}
+    </Modal>
+  );
+};
+```
+
+### Form Integration
+
+```jsx
+const ModalWithForm = () => {
+  return (
+    <Modal trigger={<Button>Edit Profile</Button>} title="Edit Profile">
+      <form style={{ padding: '16px' }}>
+        <Select
+          label="Country"
+          options={countryOptions}
+          placeholder="Select your country..."
+        />
+        
+        <Select
+          label="Language"
+          options={languageOptions}
+          placeholder="Select language..."
+          style={{ marginTop: '16px' }}
+        />
+        
+        <div style={{ marginTop: '24px', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+          <Button variant="secondary">Cancel</Button>
+          <Button type="submit">Save Changes</Button>
+        </div>
+      </form>
+    </Modal>
+  );
+};
+```
+
+## Accessibility
+
+The Modal component follows accessibility best practices:
+
+- Built on Radix UI's Dialog primitive for robust accessibility
+- Properly manages focus when opened and closed
+- Traps focus within the modal
+- Supports keyboard navigation (Tab, Escape)
+- Uses proper ARIA roles and attributes
+- Correctly handles screen reader announcements
+- Supports closing with the Escape key
+- Background scroll is prevented when modal is open
+- Properly labeled close button
+
+## Implementation Details
+
+### CSS Variables
+
+The Modal component uses the following token CSS variables:
+
+| Variable | Purpose |
+|----------|---------|
+| `--t-color-overlay` | Background overlay color |
+| `--t-color-bg` | Modal background color |
+| `--t-color-border` | Border color for header and footer dividers |
+| `--t-color-text-primary` | Title and primary text color |
+| `--t-color-text-secondary` | Secondary text color |
+| `--t-color-bg-hover` | Hover state for close button |
+| `--t-border-radius-200` | Border radius |
+| `--t-shadow-400` | Shadow for the modal |
+| `--t-font-size-headline-sm` | Title font size |
+| `--t-font-weight-bold` | Title font weight |
+| `--t-line-height-normal` | Line height for text |
+| `--t-space-*` | Padding and spacing |
+| `--t-z-modal` | Z-index for the modal and overlay (1050) |
+| `--t-z-drawer-modal` | Higher z-index when opened from drawer (1070) |
+| `--t-modal-width` | Default modal width |
+
+### Architecture
+
+The Modal component is built on Radix UI's Dialog component, which provides:
+
+1. Focus management
+2. Keyboard interactions
+3. Focus trapping
+4. Proper ARIA attributes
+5. Animation support
+
+The Tagaddod implementation extends this with:
+
+1. Multiple footer styles
+2. Size variants (default and fullscreen)
+3. RTL support
+4. Customizable header and footer
+
+### Animations
+
+The Modal includes smooth animations for:
+
+1. Overlay fade-in and fade-out
+2. Modal scale and fade transitions
+3. RTL-specific animations
+
+These animations are disabled when the user prefers reduced motion.
+
+### Browser Support
+
+The Modal component is compatible with all modern browsers and includes RTL language support.
