@@ -5,26 +5,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 🚨 MANDATORY FIRST STEP: Component Documentation Check
 
 **Before responding to ANY component-related request:**
-1. **ALWAYS read** the relevant `.component-documentation/[ComponentName].md` or `.component-documentation/[ComponentName].mdx` file first
-2. **Use the Realm Agent Navigation Index** at the top of each file to quickly find relevant sections with line number references
-3. **If the index doesn't contain what you need**, read the ENTIRE document from start to finish
-4. **If component is NOT found in documentation**, proceed to create new component using Design Token rules (see below)
-5. **Use ONLY** the patterns, props, and imports shown in the documentation
-6. **Never guess** component usage - the documentation is the source of truth
+1. **Session Memory Check**: Before reading any documentation, check if component context already exists in current session
+2. **IF component context EXISTS in session**: Use cached implementation knowledge without re-reading documentation
+3. **IF component context DOES NOT exist**: Read complete `.component-documentation/[ComponentName].md` or `.component-documentation/[ComponentName].mdx` file from start to finish
+4. **Read ENTIRE documentation file**: Since not all documentation has proper indexing yet, always read the complete file to ensure full understanding
+5. **Cache Complete Context**: Store full implementation patterns, props, examples, and usage guidelines in session memory
+6. **If component is NOT found in documentation**, proceed to create new component using Design Token rules (see below)
+7. **Use ONLY** the patterns, props, and imports shown in the documentation
+8. **Never guess** component usage - the documentation is the source of truth
 
-Available documentation: `.component-documentation/` contains detailed guides for Button, TextInput, Modal, Table, Select, and all other Tagaddod components. Each file has a comprehensive navigation index for efficient agent navigation.
+Available documentation: `.component-documentation/` contains detailed guides for Button, TextInput, Modal, Table, Select, and all other Tagaddod components. Documentation indexing is in progress - always read complete files for now.
 
-## 🚨 MANDATORY RULE: Component Creation with Design Tokens
+## 🚨 MANDATORY RULE: Design Tokens - The Styling Source of Truth
 
-**When a suitable component is NOT found in `.component-documentation/`:**
+**For ANY styling task (component creation, layout, custom styles, or modifications):**
 
-1. **MUST create new components using Tagaddod design tokens ONLY**
-2. **NEVER use arbitrary CSS values** - always reference design system tokens
+1. **ALWAYS reference `.component-documentation/DesignTokens.mdx` FIRST** before applying any styles
+2. **MUST use Tagaddod design tokens ONLY** - NEVER use arbitrary CSS values
 3. **Import design tokens from**: `@tagaddod-design/react/dist/styles/styles.css`
-4. **Check DesignTokens.mdx** in `.component-documentation/` for complete token reference
+4. **Apply design tokens using CSS custom properties**:
+   - Colors: `var(--t-color-fill-*)`, `var(--t-color-text-*)`, `var(--t-color-border-*)`
+   - Spacing: `var(--t-space-*)` (0 through 3200)
+   - Typography: `var(--t-typography-*)`, `var(--t-font-*)`
+   - Layout: `var(--t-border-radius-*)`, `var(--t-shadow-*)`
 5. **Follow established patterns** from existing Tagaddod components
 
-This ensures all custom components maintain design system consistency and support the "vibe coder with no code knowledge" workflow.
+**This applies to:**
+- Creating new custom components
+- Styling page layouts and sections
+- Modifying existing component styles
+- Adding margins, padding, colors, or typography
+- Any visual design decision
+
+This ensures all implementations maintain design system consistency and support the "vibe coder with no code knowledge" workflow.
 
 ## 🚨 MANDATORY RULE: Modular Component Architecture
 
@@ -114,14 +127,15 @@ This ensures consistent design language across all implementations.
 **Context-Aware Documentation Reading:**
 1. **Session Memory Check**: Before reading any documentation, check if component context already exists in current session
 2. **IF component context EXISTS in session**: Use cached implementation knowledge without re-reading documentation
-3. **IF component context DOES NOT exist**: Read complete `.component-documentation/[ComponentName].mdx` file
-4. **Cache Complete Context**: Store full implementation patterns, props, examples, and usage guidelines in session memory
-5. **Apply Comprehensive Understanding**: Generate component using retained implementation knowledge
+3. **IF component context DOES NOT exist**: Read complete `.component-documentation/[ComponentName].mdx` file from start to finish
+4. **Read ENTIRE documentation**: Since indexing is incomplete, always read the full file for comprehensive understanding
+5. **Cache Complete Context**: Store full implementation patterns, props, examples, and usage guidelines in session memory
+6. **Apply Comprehensive Understanding**: Generate component using retained implementation knowledge
 
 **Auto-Discovery Features:**
 - **File Detection**: Automatically scan `.component-documentation/` for all available components
 - **Change Detection**: Monitor for new/modified documentation files and invalidate cache when needed
-- **Navigation Index Processing**: Use "Realm Agent Navigation Index" for efficient section jumping
+- **Complete File Reading**: Always read documentation files from start to finish (indexing in progress)
 - **Token Optimization**: Balance comprehensive understanding vs. efficient token usage
 
 ### Tier 2: Shadcn Components (First Fallback)
@@ -160,12 +174,15 @@ This ensures consistent design language across all implementations.
 
 ### Design Token Integration (All Tiers)
 
-**Mandatory for ALL external components (Tiers 2-4):**
-1. **Token Application**: Override all external styling with Tagaddod design tokens
-2. **Color Mapping**: Apply `var(--t-color-*)` tokens to match Tagaddod theme
-3. **Spacing Consistency**: Use `var(--t-space-*)` for all margins, padding, and layout
-4. **Typography Alignment**: Apply `var(--t-typography-*)` and `var(--t-font-*)` tokens
-5. **Visual Consistency**: Ensure component matches existing Tagaddod components
+**Mandatory for ALL components and styling tasks (All Tiers):**
+1. **ALWAYS check `.component-documentation/DesignTokens.mdx`** before applying any styles
+2. **Token Application**: Use Tagaddod design tokens for all styling decisions
+3. **Color Mapping**: Apply `var(--t-color-*)` tokens to match Tagaddod theme
+4. **Spacing Consistency**: Use `var(--t-space-*)` for all margins, padding, and layout
+5. **Typography Alignment**: Apply `var(--t-typography-*)` and `var(--t-font-*)` tokens
+6. **Layout Properties**: Use `var(--t-border-radius-*)`, `var(--t-shadow-*)` for borders and shadows
+7. **Visual Consistency**: Ensure all implementations match existing Tagaddod components
+8. **NEVER use hardcoded values**: No `#333`, `16px`, `14px`, or arbitrary CSS values
 
 ### Session Memory Management
 
@@ -325,10 +342,14 @@ This ensures external libraries maintain Tagaddod's design language and visual c
 - Include critical notes and fallback instructions
 - Follow the exact format pattern from existing documentation files
 
-### 3. Index Pattern Requirements
-**All indexes MUST include:**
+### 3. Index Pattern Requirements (Future Enhancement)
+**Note: Documentation indexing is currently in progress. Not all documentation files have proper navigation indexes yet.**
+
+**For now, ALWAYS read documentation files completely from start to finish.**
+
+**When creating new documentation or adding indexes, use this pattern:**
 ```html
-<!-- 
+<!--
 REALM AGENT NAVIGATION INDEX
 =============================
 Quick Reference for Claude Code Agents:
@@ -346,8 +367,8 @@ QUICK IMPLEMENTATION EXAMPLES:
 Critical information about the component
 
 ⚠️ FALLBACK INSTRUCTION:
-If you cannot find what you're looking for in the sections above, 
-read the ENTIRE document from start to finish to ensure complete 
+If you cannot find what you're looking for in the sections above,
+read the ENTIRE document from start to finish to ensure complete
 understanding of all [ComponentName] capabilities and patterns.
 -->
 ```

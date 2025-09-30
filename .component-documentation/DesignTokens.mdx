@@ -66,6 +66,45 @@ understanding of all design token capabilities and patterns.
 
 This document provides a comprehensive reference for all Tagaddod design tokens available in the design system. **Always use these tokens instead of hardcoded values** to maintain consistency.
 
+## 🚨 MANDATORY RULES
+
+### Background Colors
+- **Full-page backgrounds**: ALWAYS use `--t-color-bg-light` for body tag and main page backgrounds
+- **Card/Component backgrounds**: Use `--t-color-surface-primary` for any cards or containers outside of design library components
+- **Card borders**: When using `--t-color-surface-primary` background, ALWAYS add border using `--t-color-border-secondary`
+
+### Text Colors
+- **Primary text**: Use `--t-color-text-primary` for normal text on light surfaces (high contrast)
+- **Text on dark surfaces**: Use `--t-color-text-on-fill` for text placed on dark surfaces (black, blue, etc.)
+- **Secondary text**: Use `--t-color-text-secondary` for less emphasized but readable text (subtitles, descriptions)
+
+
+### Examples
+```css
+/* ✅ CORRECT: Full page background */
+body {
+  background-color: var(--t-color-bg-light);
+}
+
+/* ✅ CORRECT: Custom card component */
+.custom-card {
+  background-color: var(--t-color-surface-primary);
+  border: var(--t-border-width-25) solid var(--t-color-border-secondary);
+  color: var(--t-color-text-primary);
+}
+
+/* ✅ CORRECT: Text on dark button */
+.dark-button {
+  background-color: var(--t-color-fill-brand);
+  color: var(--t-color-text-on-fill);
+}
+
+/* ✅ CORRECT: Secondary text */
+.description {
+  color: var(--t-color-text-secondary);
+}
+```
+
 ## Quick Reference
 
 All tokens are available as CSS custom properties from `@tagaddod-design/react/dist/styles/styles.css`:
@@ -104,7 +143,7 @@ All tokens are available as CSS custom properties from `@tagaddod-design/react/d
 --t-color-text-primary      /* Main text color */
 --t-color-text-secondary    /* Subdued text */
 --t-color-text-tertiary     /* Very light text */
---t-color-text-inverse      /* Text on dark backgrounds */
+--t-color-text-on-fill      /* Text on dark backgrounds */
 --t-color-text-brand        /* Brand colored text */
 --t-color-text-critical     /* Error/danger text */
 --t-color-text-warning      /* Warning text */
@@ -388,7 +427,7 @@ p { font: var(--t-typography-body-md); }
   padding: var(--t-space-200) var(--t-space-300);
   border-radius: var(--t-border-radius-100);
   background: var(--t-color-fill-brand);
-  color: var(--t-color-text-inverse);
+  color: var(--t-color-text-on-fill);
   transition: var(--t-transition-soft);
 }
 ```
