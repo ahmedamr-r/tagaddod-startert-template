@@ -19,57 +19,72 @@ import { Button } from '../Button/Button';
 ```
 
 ## ❌ CRITICAL MISTAKES TO AVOID
-1. **❌ NEVER create manual footers in children**
-2. **❌ NEVER add buttons inside children**
-3. **❌ NEVER use custom button containers**
-4. **❌ NEVER create `<div className="footer">` in children**
+1. **❌ NEVER create manual FOOTER action buttons in children**
+2. **❌ NEVER create modal-level Cancel/Save/Submit buttons in children**
+3. **❌ NEVER create `<div className="footer">` in children**
+
+**NOTE:** Buttons **within your content** (like "Add Item", "Delete Row", etc.) are perfectly fine in children!
 
 ## ✅ CORRECT IMPLEMENTATION PATTERN
 ```jsx
-// ✅ CORRECT - Default single button pattern
+// ✅ CORRECT - Content buttons are fine, no footer buttons
 <Modal
-  title="User Form"
-  primaryLabel="Save"              // Single primary button (DEFAULT)
-  onPrimary={handleSave}           // Button action
+  title="User Management"
+  primaryLabel="Close"
+  onPrimary={() => setOpen(false)}
 >
-  {/* ONLY body content goes here */}
-  <form>
-    <input placeholder="Name" />
-    <select>...</select>
-  </form>
-  {/* NO BUTTONS OR FOOTERS HERE */}
+  {/* Content with action buttons - THIS IS FINE! */}
+  <div>
+    <h3>Users List</h3>
+    <Button onClick={handleAddUser}>Add New User</Button>
+
+    <UserList>
+      {users.map(user => (
+        <UserRow key={user.id}>
+          {user.name}
+          <Button onClick={() => handleEdit(user)}>Edit</Button>
+          <Button onClick={() => handleDelete(user)}>Delete</Button>
+        </UserRow>
+      ))}
+    </UserList>
+  </div>
 </Modal>
 
-// ✅ CORRECT - Multiple buttons (only when needed)
+// ✅ CORRECT - Footer props for modal-level actions
 <Modal
-  title="User Form"
-  footerVariant="cancelAndActions"  // Use when multiple buttons needed
+  title="Edit User"
+  footerVariant="cancelAndActions"
   cancelLabel="Cancel"
-  primaryLabel="Save"
-  onCancel={handleCancel}
+  primaryLabel="Save Changes"
+  onCancel={() => setOpen(false)}
   onPrimary={handleSave}
 >
-  {/* Content only */}
-</Modal
+  {/* Content can have its own buttons too! */}
+  <form>
+    <input placeholder="Name" />
+    <Button onClick={generatePassword}>Generate Password</Button>
+  </form>
+</Modal>
 
-// ❌ WRONG - Manual footer creation
-<Modal title="User Form">
+// ❌ WRONG - Manual modal-level footer buttons
+<Modal title="Edit User">
   <form>
     <input placeholder="Name" />
   </form>
-  {/* ❌ DON'T DO THIS */}
-  <div className="footer">
-    <button>Cancel</button>
+  {/* ❌ DON'T CREATE MODAL FOOTER BUTTONS HERE */}
+  <div style={{ position: 'sticky', bottom: 0 }}>
+    <button>Cancel</button>  {/* Use footer props instead! */}
     <button>Save</button>
   </div>
 </Modal>
 ```
 
 ## 🎯 AI IMPLEMENTATION CHECKLIST
-- [ ] Use `children` for body content ONLY
+- [ ] Use `children` for body content (including content-level buttons)
 - [ ] **DEFAULT: Use single button with `primaryLabel` only**
-- [ ] Use `footerVariant="cancelAndActions"` only when multiple buttons needed
-- [ ] Never create manual `<footer>` elements
+- [ ] Use footer props for modal-level actions (Cancel, Save, Submit)
+- [ ] Content buttons (Add, Edit, Delete items) go in `children` - that's fine!
+- [ ] Never create manual modal footer bars
 - [ ] Use `showFooter={false}` if no footer needed
 
 ---
@@ -105,59 +120,70 @@ import { Modal } from '@tagaddod-design/react';
 
 ## ❌ COMMON AI AGENT MISTAKES
 
-### Mistake 1: Manual Footer Creation
+### Mistake 1: Manual Modal Footer Creation
 ```jsx
-// ❌ WRONG - Don't create manual footers
+// ❌ WRONG - Don't create modal-level footer buttons manually
 <Modal title="Delete Confirmation">
   <p>Are you sure?</p>
-  <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-    <button>Cancel</button>
+  <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '20px'}}>
+    <button>Cancel</button>  {/* Modal-level action - use footer props! */}
     <button>Delete</button>
   </div>
 </Modal>
 
-// ✅ CORRECT - Single button (DEFAULT)
+// ✅ CORRECT - Use footer props for modal actions
 <Modal
   title="Delete Confirmation"
-  primaryLabel="Delete"        // Single button for simple actions
+  footerVariant="cancelAndActions"
+  cancelLabel="Cancel"
+  primaryLabel="Delete"
+  onCancel={() => setOpen(false)}
   onPrimary={handleDelete}
 >
   <p>Are you sure you want to delete this item?</p>
 </Modal>
-
-// ✅ CORRECT - Multiple buttons (when user needs choice)
-<Modal
-  title="Delete Confirmation"
-  footerVariant="cancelAndActions"  // Only when multiple buttons needed
-  cancelLabel="Cancel"
-  primaryLabel="Delete"
-  onCancel={handleCancel}
-  onPrimary={handleDelete}
->
-  <p>Are you sure?</p>
-</Modal>
 ```
 
-### Mistake 2: Form with Manual Submit Buttons
+### Mistake 2: Confusing Content Buttons with Footer Buttons
 ```jsx
-// ❌ WRONG - Manual form buttons
-<Modal title="User Registration">
-  <form>
-    <input name="email" />
-    <div className="form-actions">
-      <button type="submit">Register</button>
-    </div>
-  </form>
+// ✅ CORRECT - Content buttons inside children are fine!
+<Modal title="User Management" primaryLabel="Close" onPrimary={() => setOpen(false)}>
+  <div>
+    <h3>Users</h3>
+    <Button onClick={handleAddUser}>Add New User</Button>  {/* ✅ Content button - OK! */}
+
+    {users.map(user => (
+      <div key={user.id}>
+        {user.name}
+        <Button onClick={() => editUser(user)}>Edit</Button>  {/* ✅ Content button - OK! */}
+      </div>
+    ))}
+  </div>
 </Modal>
 
-// ✅ CORRECT - Single button (DEFAULT)
+// ❌ WRONG - Modal-level footer actions in children
+<Modal title="Edit Form">
+  <form>
+    <input name="email" />
+  </form>
+  <div style={{position: 'sticky', bottom: 0}}>
+    <button>Cancel</button>  {/* ❌ Use footer props instead! */}
+    <button>Save</button>
+  </div>
+</Modal>
+
+// ✅ CORRECT - Footer props for modal actions, content buttons in children
 <Modal
-  title="User Registration"
-  primaryLabel="Register"      // Single button for forms
-  onPrimary={handleSubmit}
+  title="Edit Form"
+  footerVariant="cancelAndActions"
+  cancelLabel="Cancel"
+  primaryLabel="Save"
+  onCancel={() => setOpen(false)}
+  onPrimary={handleSave}
 >
   <form>
     <input name="email" />
+    <Button onClick={generateEmail}>Generate Email</Button>  {/* ✅ Content button - OK! */}
   </form>
 </Modal>
 ```
@@ -452,12 +478,39 @@ const DeleteConfirmation = ({ item, onConfirm }) => (
 ```jsx
 <Modal
   title="User Details"
-  showFooter={false}  // No footer needed
+  showFooter={false}  // No modal-level actions needed
 >
   <div style={{ padding: '16px' }}>
     <h3>John Doe</h3>
     <p><strong>Email:</strong> john@example.com</p>
     <p><strong>Role:</strong> Administrator</p>
+
+    {/* Content buttons are fine in children! */}
+    <Button onClick={handleResetPassword}>Reset Password</Button>
+    <Button onClick={handleSendEmail}>Send Email</Button>
+  </div>
+</Modal>
+```
+
+### Content Management with Action Buttons
+```jsx
+<Modal
+  title="User Management"
+  primaryLabel="Close"
+  onPrimary={() => setOpen(false)}
+>
+  <div style={{ padding: '16px' }}>
+    <div style={{ marginBottom: '16px' }}>
+      <Button onClick={handleAddUser}>Add New User</Button>
+    </div>
+
+    {users.map(user => (
+      <div key={user.id} style={{ display: 'flex', gap: '8px', padding: '8px', borderBottom: '1px solid #eee' }}>
+        <span>{user.name}</span>
+        <Button variant="plain" onClick={() => handleEdit(user)}>Edit</Button>
+        <Button variant="plain" tone="critical" onClick={() => handleDelete(user)}>Delete</Button>
+      </div>
+    ))}
   </div>
 </Modal>
 ```
@@ -542,39 +595,48 @@ Compatible with all modern browsers with full RTL support.
 
 ## 🎯 QUICK REFERENCE FOR AI AGENTS
 
-### ✅ DO THIS (DEFAULT):
+### ✅ DO THIS (Content with buttons):
 ```jsx
 <Modal
-  title="Title"
-  primaryLabel="Save"         // Single button (DEFAULT)
-  onPrimary={handleSave}
+  title="User Management"
+  primaryLabel="Close"
+  onPrimary={() => setOpen(false)}
 >
-  <div>Content only</div>
+  <div>
+    {/* ✅ Content buttons are fine! */}
+    <Button onClick={addUser}>Add User</Button>
+    <Button onClick={deleteUser}>Delete</Button>
+  </div>
 </Modal>
 ```
 
-### ✅ Multiple buttons (only when needed):
+### ✅ With footer (modal-level actions):
 ```jsx
 <Modal
-  title="Title"
-  footerVariant="cancelAndActions"  // Only when user needs choice
-  cancelLabel="Cancel"
-  primaryLabel="Save"
+  title="Edit Form"
+  footerVariant="cancelAndActions"
+  cancelLabel="Cancel"  // Modal footer button
+  primaryLabel="Save"   // Modal footer button
   onCancel={handleCancel}
   onPrimary={handleSave}
 >
-  <div>Content only</div>
+  <form>
+    {/* ✅ Content buttons are fine here too! */}
+    <Button onClick={generatePassword}>Generate Password</Button>
+  </form>
 </Modal>
 ```
 
 ### ❌ NEVER DO THIS:
 ```jsx
-<Modal title="Title">
-  <div>Content</div>
-  <div className="footer">  {/* ❌ */}
+<Modal title="Edit Form">
+  <form>Content</form>
+  {/* ❌ Don't create modal footer buttons manually */}
+  <div className="footer">
+    <button>Cancel</button>  {/* Use footer props! */}
     <button>Save</button>
   </div>
 </Modal>
 ```
 
-**Remember: Use `children` for content, use props for footer!**
+**Remember: Content buttons go in `children` (✅), modal footer buttons use props (✅), manual modal footers are wrong (❌)!**

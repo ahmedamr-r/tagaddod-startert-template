@@ -1,68 +1,73 @@
 import { Meta, Story, Controls, Canvas, ArgTypes } from '@storybook/blocks';
 import * as TopBarStories from './TopBar.stories';
 import { TopBar } from './TopBar';
-import { IconBuilding, IconBuildingStore, IconHome, IconSettings, IconUsers, IconHelp } from '@tabler/icons-react';
 
 <Meta of={TopBarStories} />
 
+# REALM AGENT NAVIGATION INDEX
 
-REALM AGENT NAVIGATION INDEX
-=============================
-Quick Reference for Claude Code Agents:
+Quick Reference for AI Agents (Claude Code):
 
-📦 IMPORT & SETUP (Lines 16-20)
-🎯 BASIC USAGE (Lines 26-37)
-🏢 LOGO CONFIGURATION (Lines 39-67)
-🏭 WAREHOUSE SELECTOR (Lines 69-112)
-🎨 DROPDOWN CUSTOMIZATION (Lines 114-174)
-🚪 LOGOUT OPTIONS (Lines 176-212)
-📱 MOBILE EXPERIENCE (Lines 214-258)
-🌐 INTERNATIONALIZATION (Lines 260-276)
-🔄 INTERACTIVE EXAMPLE (Lines 278-301)
-🎨 DESIGN SYSTEM INTEGRATION (Lines 303-333)
-♿ ACCESSIBILITY (Lines 334-341)
-📝 FORM INTEGRATION (Lines 342-352)
-🔧 IMPLEMENTATION DETAILS (Lines 354-402)
+📋 **CRITICAL READING**: TopBar-AI-AGENT-GUIDE.md (Complete AI implementation guide)
+📦 **3-SLOT ARCHITECTURE** (Lines 50-120)
+🎯 **BASIC USAGE** (Lines 122-160)
+🔄 **SWAPPABLE SECTIONS** (Lines 162-340)
+  - Center Content (Lines 170-240)
+  - End Content (Lines 242-310)
+  - Warehouse Example (Lines 312-340)
+📱 **RESPONSIVE PATTERNS** (Lines 342-420)
+🌐 **RTL SUPPORT** (Lines 422-480)
+♿ **ACCESSIBILITY** (Lines 482-500)
+💡 **COMPLETE EXAMPLES** (Lines 502-600)
 
-QUICK IMPLEMENTATION EXAMPLES:
-- Basic TopBar: Lines 30-37
-- Clickable Logo: Lines 47-53
-- Custom Warehouse Options: Lines 89-101
-- Custom Dropdown: Lines 122-160
-- Mobile Layout: Lines 221-227
-- RTL Support: Lines 268-276
-- Full Layout Integration: Lines 235-258
+**⚠️ CRITICAL FOR AI AGENTS:**
+1. **Default = Empty**: Center and end sections are NULL by default
+2. **Warehouse is optional**: Use `showWarehouseDropdown={true}` to enable example
+3. **Center requires flag**: Must set `showCenterSection={true}` to show center content
+4. **Responsive first**: ALWAYS use design tokens and flexible layouts (see guide)
+5. **Read AI Guide**: `/TopBar-AI-AGENT-GUIDE.md` has complete patterns and examples
 
-⚠️ MOBILE INTEGRATION NOTE:
-TopBar requires proper mobile state management with isMobileSidebarOpen and 
-onHamburgerMenuClick props for responsive behavior (Lines 221-227).
+**🚨 ANTI-PATTERNS TO AVOID:**
+- ❌ Hardcoded widths/heights in custom content
+- ❌ Assuming warehouse dropdown exists by default
+- ❌ Forgetting `showCenterSection={true}`
+- ❌ Not considering mobile responsiveness
+- ❌ Using literal values instead of design tokens
 
-⚠️ WAREHOUSE SELECTOR NOTE:
-The warehouse selector uses Popover + Listbox components. Custom options 
-support icons, separators, and disabled states (Lines 122-160).
+**⚠️ FALLBACK INSTRUCTION:**
+Read TopBar-AI-AGENT-GUIDE.md for comprehensive implementation patterns.
 
-⚠️ LOGO CUSTOMIZATION NOTE:
-Logo can be made clickable with logoClickable prop and styled with logoProps
-for size and color customization (Lines 47-67).
-
-⚠️ FALLBACK INSTRUCTION:
-If you cannot find what you're looking for in the sections above, 
-read the ENTIRE document from start to finish to ensure complete 
-understanding of all TopBar capabilities and integration patterns.
-
+---
 
 # TopBar Component
 
-The TopBar component is a comprehensive top navigation bar with TAGADDOD logo and highly customizable dropdown functionality, designed for modern web applications with multi-platform support.
+The TopBar is a **flexible 3-slot layout system** for application headers. It provides independent, swappable sections that you can customize with any content.
 
-## Overview
+## Architecture Overview
 
-TopBar provides a complete navigation header solution with mobile-optimized hamburger menu, warehouse selector dropdown, and extensive customization options. It integrates seamlessly with the Sidebar component for complete layout solutions.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ┌──────────┐  ┌─────────────────┐  ┌──────────────────────┐   │
+│ │  START   │  │     CENTER      │  │         END          │   │
+│ │  (Fixed) │  │   (Swappable)   │  │     (Swappable)      │   │
+│ └──────────┘  └─────────────────┘  └──────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### The 3 Slots
+
+| Slot | Purpose | Swappable | Default |
+|------|---------|-----------|---------|
+| **START** | Logo + Mobile menu | ❌ Fixed | TAGADDOD logo, hamburger |
+| **CENTER** | Navigation/Search | ✅ Yes | `null` (empty) |
+| **END** | User actions/Profile | ✅ Yes | `null` (empty) |
+
+**Key Concept**: CENTER and END are fully swappable slots. You can put ANY React component there. The warehouse dropdown is just an optional example.
 
 ## Import
 
 ```jsx
-import { TopBar } from '@tagaddod/react';
+import { TopBar } from '@tagaddod-design/react';
 ```
 
 ## Props
@@ -71,656 +76,564 @@ import { TopBar } from '@tagaddod/react';
 
 ## Basic Usage
 
-<Canvas of={TopBarStories.Default} />
+### Minimal TopBar
+
+<Canvas of={TopBarStories.BasicLayout} />
 
 ```jsx
-<TopBar
-  selectedWarehouse="Al Haram Warehouse"
-  warehouses={["Al Haram Warehouse", "Main Warehouse", "Secondary Warehouse"]}
-  onWarehouseChange={setSelectedWarehouse}
-  onLogoutClick={handleLogout}
-/>
+// Just logo and hamburger - clean slate
+<TopBar />
 ```
 
-## Logo Configuration
+### With Warehouse Dropdown (Example)
 
-### Clickable Logo
-
-Make the TAGADDOD logo clickable for navigation to home page.
-
-<Canvas of={TopBarStories.ClickableLogo} />
+<Canvas of={TopBarStories.WithWarehouseDropdown} />
 
 ```jsx
+// Enable the optional warehouse dropdown example
 <TopBar
-  logoClickable={true}
-  onLogoClick={() => navigate('/')}
-  selectedWarehouse="Al Haram Warehouse"
-/>
-```
-
-### Logo Props
-
-Pass additional props to customize the Logo component.
-
-```jsx
-<TopBar
-  logoProps={{
-    size: "large",
-    color: "primary"
-  }}
-  selectedWarehouse="Al Haram Warehouse"
-/>
-```
-
-## Warehouse Selector
-
-### Standard Warehouse Selection
-
-The warehouse selector uses a Popover with integrated Listbox for smooth dropdown interactions.
-
-<Canvas of={TopBarStories.Default} />
-
-```jsx
-<TopBar
-  selectedWarehouse="Al Haram Warehouse"
-  warehouses={["Al Haram Warehouse", "Main Warehouse", "Secondary Warehouse"]}
-  onWarehouseChange={setSelectedWarehouse}
-/>
-```
-
-### Custom Warehouse List
-
-<Canvas of={TopBarStories.CustomWarehouses} />
-
-```jsx
-<TopBar
-  selectedWarehouse="Central Distribution Center"
-  warehouses={[
-    "Central Distribution Center",
-    "North Regional Hub", 
-    "South Regional Hub",
-    "East Coast Facility",
-    "West Coast Facility"
-  ]}
-  onWarehouseChange={setSelectedWarehouse}
-/>
-```
-
-### Disabled Warehouse Selector
-
-<Canvas of={TopBarStories.DisabledWarehouse} />
-
-```jsx
-<TopBar
-  selectedWarehouse="Al Haram Warehouse"
-  warehouseDisabled={true}
-/>
-```
-
-## Dropdown Customization
-
-### Complete Listbox Customization
-
-Replace the default warehouse dropdown with completely custom options.
-
-<Canvas of={TopBarStories.CustomizedListbox} />
-
-```jsx
-import { IconHome, IconUsers, IconSettings, IconHelp } from '@tabler/icons-react';
-
-const customOptions = [
-  {
-    label: "Dashboard",
-    value: "dashboard",
-    prefix: <IconHome size={16} />
-  },
-  {
-    label: "User Management",
-    value: "users",
-    prefix: <IconUsers size={16} />
-  },
-  {
-    label: "Settings",
-    value: "settings",
-    prefix: <IconSettings size={16} />
-  },
-  {
-    label: "",
-    value: "separator",
-    disabled: true,
-    customContent: <Separator />
-  },
-  {
-    label: "Help & Support",
-    value: "help",
-    prefix: <IconHelp size={16} />
-  }
-];
-
-<TopBar
-  customListboxOptions={customOptions}
-  warehouseIcon={<IconBuildingStore size={18} />}
-  onCustomListboxSelect={(value, option) => handleSelection(value, option)}
-  showLogoutOption={false}
-/>
-```
-
-### Popover Positioning
-
-<Canvas of={TopBarStories.PopoverCustomization} />
-
-```jsx
-<TopBar
-  popoverSide="top"
-  popoverAlign="center"
-  showPopoverArrow={true}
-  popoverMargin={8}
-  selectedWarehouse="Central Hub"
-/>
-```
-
-## Logout Options
-
-### Standard Logout
-
-<Canvas of={TopBarStories.Default} />
-
-```jsx
-<TopBar
-  selectedWarehouse="Al Haram Warehouse"
-  showLogoutOption={true}
-  onLogoutClick={handleLogout}
-/>
-```
-
-### Custom Logout Text
-
-<Canvas of={TopBarStories.CustomLogoutText} />
-
-```jsx
-<TopBar
+  showWarehouseDropdown={true}
   selectedWarehouse="Main Warehouse"
+  warehouses={["Main Warehouse", "Secondary Warehouse"]}
+  onWarehouseChange={setWarehouse}
+  onLogoutClick={handleLogout}
+/>
+```
+
+**Note**: The warehouse dropdown is an **optional convenience feature**, not a default. Use `showWarehouseDropdown={true}` to enable it, or replace the end section with your own component.
+
+## Swappable Sections
+
+### Center Section (`centerContent`)
+
+**Purpose**: Primary navigation, search bars, or application status
+**Positioning**: Absolutely centered (50% of TopBar width)
+**Default**: `null` (hidden)
+
+<Canvas of={TopBarStories.CenterContentSwappable} />
+
+#### Requirements
+1. Set `showCenterSection={true}` to enable
+2. Pass content via `centerContent` prop
+3. Content should be responsive (see guidelines below)
+
+#### Search Bar Example
+
+```jsx
+<TopBar
+  showCenterSection={true}
+  centerContent={
+    <TextInput
+      placeholder="Search products..."
+      prefixIcon={<IconSearch size={18} />}
+      style={{
+        width: '100%',
+        maxWidth: '500px',
+        minWidth: '300px'
+      }}
+    />
+  }
+/>
+```
+
+#### Navigation Menu Example
+
+```jsx
+<TopBar
+  showCenterSection={true}
+  centerContent={
+    <div style={{
+      display: 'flex',
+      gap: 'var(--t-space-300)',
+      alignItems: 'center'
+    }}>
+      <Button variant="plain" size="small">Dashboard</Button>
+      <Button variant="plain" size="small">Orders</Button>
+      <Button variant="plain" size="small">Analytics</Button>
+    </div>
+  }
+/>
+```
+
+#### Status Indicator Example
+
+```jsx
+<TopBar
+  showCenterSection={true}
+  centerContent={
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 'var(--t-space-200)',
+      padding: '0 var(--t-space-400)',
+      backgroundColor: 'var(--t-color-fill-success-secondary)',
+      borderRadius: 'var(--t-border-radius-300)',
+      color: 'var(--t-color-text-success)',
+      height: '36px'
+    }}>
+      <div style={{
+        width: '8px',
+        height: '8px',
+        borderRadius: '50%',
+        backgroundColor: 'var(--t-color-icon-success)'
+      }} />
+      All Systems Operational
+    </div>
+  }
+/>
+```
+
+### End Section (`endContent`)
+
+**Purpose**: User profile, notifications, actions, or contextual controls
+**Positioning**: Right-aligned (left-aligned in RTL)
+**Default**: `null` (empty)
+
+<Canvas of={TopBarStories.EndContentSwappable} />
+
+#### User Profile with Notifications
+
+```jsx
+<TopBar
+  endContent={
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 'var(--t-space-300)'
+    }}>
+      <Button
+        variant="plain"
+        size="small"
+        prefixIcon={<IconBell size={18} />}
+        aria-label="Notifications"
+      >
+        3
+      </Button>
+      <div style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '50%',
+        backgroundColor: 'var(--t-color-fill-brand-primary)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 'var(--t-font-weight-medium)',
+        fontSize: 'var(--t-font-size-250)',
+        cursor: 'pointer'
+      }}>
+        JD
+      </div>
+    </div>
+  }
+/>
+```
+
+#### Action Buttons
+
+```jsx
+<TopBar
+  endContent={
+    <div style={{ display: 'flex', gap: 'var(--t-space-200)' }}>
+      <Button
+        variant="outlined"
+        size="small"
+        prefixIcon={<IconPlus size={16} />}
+      >
+        New
+      </Button>
+      <Button variant="primary" size="small">
+        Export
+      </Button>
+    </div>
+  }
+/>
+```
+
+#### Custom Dropdown
+
+```jsx
+<TopBar
+  endContent={
+    <Popover>
+      <button>
+        <IconBuilding size={16} />
+        <span>Main Warehouse</span>
+        <IconChevronDown size={16} />
+      </button>
+      {/* Your custom dropdown content */}
+    </Popover>
+  }
+/>
+```
+
+### Warehouse Dropdown (Optional Example)
+
+The TopBar includes an **optional** warehouse dropdown as a convenience feature:
+
+```jsx
+<TopBar
+  showWarehouseDropdown={true}
+  selectedWarehouse="Main Warehouse"
+  warehouses={["Main Warehouse", "Secondary Warehouse"]}
+  onWarehouseChange={setWarehouse}
   showLogoutOption={true}
   logoutText="Sign Out"
   onLogoutClick={handleLogout}
 />
 ```
 
-### Without Logout Option
+**Important Notes:**
+- `showWarehouseDropdown` is `false` by default
+- If `endContent` is provided, warehouse dropdown is ignored
+- This is demonstration code - build your own for production use
 
-<Canvas of={TopBarStories.WithoutLogout} />
+## Responsive Design Guidelines
 
-```jsx
-<TopBar
-  selectedWarehouse="Production Warehouse"
-  showLogoutOption={false}
-/>
-```
+### Critical Rules for Custom Components
 
-## Mobile Experience
+When adding content to `centerContent` or `endContent`, follow these patterns:
 
-### Mobile View
-
-<Canvas of={TopBarStories.MobileView} />
+#### 1. Use Design Tokens
 
 ```jsx
-<TopBar
-  selectedWarehouse="Al Haram Warehouse"
-  showHamburgerMenu={true}
-  isMobileSidebarOpen={false}
-  onHamburgerMenuClick={() => toggleSidebar()}
-/>
-```
+// ✅ GOOD
+<div style={{
+  display: 'flex',
+  gap: 'var(--t-space-300)',
+  padding: 'var(--t-space-200)',
+  backgroundColor: 'var(--t-color-surface-secondary)',
+  borderRadius: 'var(--t-border-radius-300)'
+}}>
+  Content
+</div>
 
-### Full Layout Integration
-
-The TopBar integrates seamlessly with the Sidebar component for complete layout solutions.
-
-<Canvas of={TopBarStories.FullLayoutExample} />
-
-```jsx
-const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
-<div style={{ display: 'flex', height: '100vh', flexDirection: 'column' }}>
-  <TopBar
-    selectedWarehouse={selectedWarehouse}
-    warehouses={warehouses}
-    showHamburgerMenu={true}
-    isMobileSidebarOpen={isMobileSidebarOpen}
-    onHamburgerMenuClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-    onLogoutClick={handleLogout}
-  />
-  
-  <div style={{ display: 'flex', flex: 1 }}>
-    <Sidebar
-      selectedItem={selectedItem}
-      onItemChange={setSelectedItem}
-    />
-    <main style={{ flex: 1 }}>
-      Your content here
-    </main>
-  </div>
+// ❌ BAD
+<div style={{
+  display: 'flex',
+  gap: '12px',
+  padding: '8px',
+  backgroundColor: '#f5f5f5',
+  borderRadius: '6px'
+}}>
+  Content
 </div>
 ```
 
-## Internationalization and RTL Support
+#### 2. Flexible Layouts
 
-The TopBar component provides comprehensive Right-to-Left (RTL) language support when used with the `ThemeProvider`. This includes automatic font switching, proper layout positioning, and directional icon handling.
+```jsx
+// ✅ GOOD
+<div style={{
+  display: 'flex',
+  alignItems: 'center',
+  gap: 'var(--t-space-300)',
+  minWidth: '200px',
+  maxWidth: '600px',
+  width: '100%'
+}}>
+  Content
+</div>
 
-### Using with ThemeProvider
+// ❌ BAD
+<div style={{ width: '800px' }}>
+  Content
+</div>
+```
 
-For full RTL support, wrap your application with `ThemeProvider`:
+#### 3. Height Constraints
+
+Keep content within TopBar height:
+- **Desktop**: 56px (3.5rem)
+- **Mobile**: 56px (3.5rem)
+
+```jsx
+// ✅ GOOD - Fits within height
+<div style={{
+  display: 'flex',
+  alignItems: 'center',
+  height: '40px',  // Fits in 56px TopBar
+  gap: 'var(--t-space-300)'
+}}>
+  <Button size="small">Action</Button>
+</div>
+
+// ❌ BAD - Exceeds height
+<div style={{ height: '60px' }}>
+  Content
+</div>
+```
+
+### Mobile Responsive Behavior
+
+<Canvas of={TopBarStories.ResponsiveBehavior} />
+
+#### Mobile Configuration
+
+```jsx
+<TopBar
+  showCenterSection={true}
+  showCenterSectionOnMobile={false}  // Hide on mobile
+  showCenterSectionOnTablet={true}   // Show on tablet
+  centerContent={<SearchBar />}
+/>
+```
+
+#### Mobile Expandable Pattern
+
+<Canvas of={TopBarStories.MobileExpandableSearch} />
+
+```jsx
+const [isExpanded, setIsExpanded] = useState(false);
+
+<TopBar
+  showCenterSection={true}
+  showCenterSectionOnMobile={false}
+  centerContent={<SearchBar />}
+
+  // Mobile action button
+  mobileActionContent={
+    <Button
+      variant="plain"
+      size="small"
+      prefixIcon={<IconSearch size={18} />}
+      aria-label="Search"
+    />
+  }
+
+  // Expansion config
+  isExpanded={isExpanded}
+  onExpandToggle={setIsExpanded}
+  expandedContent={
+    <div style={{
+      display: 'flex',
+      gap: 'var(--t-space-300)',
+      alignItems: 'center'
+    }}>
+      <TextInput
+        placeholder="Search..."
+        style={{ flex: 1 }}
+        autoFocus={isExpanded}
+      />
+      <Button variant="primary" size="small">
+        Search
+      </Button>
+    </div>
+  }
+  expansionDuration={300}
+/>
+```
+
+## RTL Support
+
+TopBar automatically handles RTL layouts when used with ThemeProvider:
 
 ```jsx
 import { ThemeProvider, TopBar } from '@tagaddod-design/react';
-import { IconBuilding, IconArrowRight } from '@tabler/icons-react';
 
-function App() {
-  return (
-    <ThemeProvider defaultDirection="rtl" defaultLocale="ar">
-      <TopBar
-        selectedWarehouse="مخزن الحرم الرئيسي"
-        warehouses={[
-          "مخزن الحرم الرئيسي",
-          "المخزن المركزي", 
-          "المخزن الثانوي"
-        ]}
-        onWarehouseChange={setSelectedWarehouse}
-        logoClickable={true}
-        onLogoClick={() => navigate('/')}
-        logoutText="تسجيل الخروج"
-        onLogoutClick={handleLogout}
-      />
-    </ThemeProvider>
-  );
-}
+<ThemeProvider defaultDirection="rtl" defaultLocale="ar">
+  <TopBar
+    showCenterSection={true}
+    centerContent={<SearchBar />}
+    endContent={<UserProfile />}
+  />
+</ThemeProvider>
 ```
 
-### Automatic RTL Adjustments
-
-When RTL is enabled via ThemeProvider, the TopBar component automatically:
-
-1. **Font Switching**: Changes from Outfit (English) to Tajawal (Arabic) font
-2. **Layout Direction**: Adjusts hamburger menu, logo, and warehouse selector positioning
-3. **Line Height**: Applies appropriate line height for Arabic text rendering
-4. **Text Alignment**: Ensures proper text alignment in dropdowns and labels
-5. **Icon Positioning**: Maintains proper spacing and alignment in RTL layouts
-6. **Popover Positioning**: Adjusts dropdown alignment for RTL reading direction
-7. **Mobile Menu**: Hamburger menu slides from the correct side in RTL
-
-<Canvas of={TopBarStories.RTLLayout} />
-
-```jsx
-<TopBar
-  selectedWarehouse="مخزن الحرم الرئيسي" 
-  warehouses={["مخزن الحرم الرئيسي", "المخزن المركزي", "المخزن الثانوي"]}
-  onWarehouseChange={setSelectedWarehouse}
-  logoutText="تسجيل الخروج"
-  dir="rtl"
-/>
-```
-
-### Directional Icon Handling
-
-**Important**: When using custom icons in TopBar (warehouse icons, menu icons), you should manually choose the appropriate icon based on the current direction:
-
-```jsx
-import { useTheme } from '@tagaddod-design/react';
-import { IconArrowLeft, IconArrowRight, IconBuilding, IconBuildingWarehouse } from '@tabler/icons-react';
-
-function DirectionalTopBar() {
-  const { isRTL } = useTheme();
-  
-  // For navigation or directional actions in custom listbox
-  const NextIcon = isRTL ? IconArrowLeft : IconArrowRight;
-  const BackIcon = isRTL ? IconArrowRight : IconArrowLeft;
-  
-  const customListboxOptions = [
-    {
-      label: isRTL ? 'مخزن الحرم الرئيسي' : 'Al Haram Warehouse',
-      value: 'main',
-      prefix: <IconBuildingWarehouse size={16} />
-    },
-    {
-      label: isRTL ? 'المخزن المركزي' : 'Central Warehouse',
-      value: 'central',
-      prefix: <IconBuilding size={16} />
-    },
-    {
-      label: '',
-      value: 'separator',
-      disabled: true,
-      customContent: <Separator />
-    },
-    {
-      label: isRTL ? 'الانتقال للمخزن التالي' : 'Go to Next Warehouse',
-      value: 'next',
-      prefix: <NextIcon size={16} />
-    },
-    {
-      label: isRTL ? 'العودة للمخزن السابق' : 'Back to Previous Warehouse', 
-      value: 'back',
-      prefix: <BackIcon size={16} />
-    }
-  ];
-  
-  return (
-    <TopBar
-      customListboxOptions={customListboxOptions}
-      onCustomListboxSelect={(value, option) => {
-        if (value === 'next') {
-          navigateToNext();
-        } else if (value === 'back') {
-          navigateToPrevious();
-        } else {
-          setSelectedWarehouse(option.label);
-        }
-      }}
-      warehouseIcon={<IconBuildingWarehouse size={16} />}
-    />
-  );
-}
-```
-
-### Common Directional Icon Patterns
-
-#### Navigation Icons in Custom Listbox
-```jsx
-// For "next" actions in warehouse navigation
-const NextIcon = isRTL ? IconArrowLeft : IconArrowRight;
-
-// For "back" actions  
-const BackIcon = isRTL ? IconArrowRight : IconArrowLeft;
-
-<TopBar customListboxOptions={[
-  {
-    label: isRTL ? 'التالي' : 'Next',
-    value: 'next',
-    prefix: <NextIcon size={16} />
-  },
-  {
-    label: isRTL ? 'رجوع' : 'Back',
-    value: 'back', 
-    prefix: <BackIcon size={16} />
-  }
-]} />
-```
-
-#### Warehouse Icons
-```jsx
-// Warehouse and building icons don't typically need direction changes
-<TopBar warehouseIcon={<IconBuildingWarehouse size={16} />} />
-```
-
-#### Mobile Menu Icons
-```jsx
-// Hamburger and close icons are handled automatically by the component
-// They don't require directional changes
-```
-
-### RTL Layout Integration
-
-The TopBar works seamlessly with RTL page layouts:
-
-```jsx
-import { useTheme } from '@tagaddod-design/react';
-
-function RTLAppLayout() {
-  const { isRTL } = useTheme();
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  
-  return (
-    <div style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
-      <TopBar
-        selectedWarehouse={isRTL ? 'مخزن الحرم الرئيسي' : 'Al Haram Warehouse'}
-        warehouses={isRTL ? 
-          ['مخزن الحرم الرئيسي', 'المخزن المركزي', 'المخزن الثانوي'] :
-          ['Al Haram Warehouse', 'Main Warehouse', 'Secondary Warehouse']
-        }
-        onWarehouseChange={setSelectedWarehouse}
-        showHamburgerMenu={true}
-        isMobileSidebarOpen={isMobileSidebarOpen}
-        onHamburgerMenuClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-        logoClickable={true}
-        onLogoClick={() => navigate('/')}
-        logoutText={isRTL ? 'تسجيل الخروج' : 'Logout'}
-        onLogoutClick={handleLogout}
-      />
-      
-      <div style={{ 
-        display: 'flex', 
-        height: 'calc(100vh - 64px)', // Account for TopBar height
-        flexDirection: isRTL ? 'row-reverse' : 'row'
-      }}>
-        <Sidebar 
-          position={isRTL ? 'right' : 'left'}
-          selectedItem="dashboard"
-          onItemChange={setSelectedItem}
-        />
-        <main style={{ 
-          flex: 1, 
-          padding: '24px',
-          textAlign: isRTL ? 'right' : 'left'
-        }}>
-          {isRTL ? 'المحتوى الرئيسي للتطبيق' : 'Main application content'}
-        </main>
-      </div>
-    </div>
-  );
-}
-```
-
-### Bilingual TopBar Configuration
-
-For applications supporting multiple languages:
-
-```jsx
-import { useTheme } from '@tagaddod-design/react';
-
-function BilingualTopBar() {
-  const { isRTL, locale } = useTheme();
-  
-  const warehouseNames = {
-    en: {
-      main: 'Al Haram Warehouse',
-      central: 'Main Warehouse', 
-      secondary: 'Secondary Warehouse'
-    },
-    ar: {
-      main: 'مخزن الحرم الرئيسي',
-      central: 'المخزن المركزي',
-      secondary: 'المخزن الثانوي'
-    }
-  };
-  
-  const currentNames = warehouseNames[locale] || warehouseNames.en;
-  
-  return (
-    <TopBar
-      selectedWarehouse={currentNames.main}
-      warehouses={Object.values(currentNames)}
-      onWarehouseChange={setSelectedWarehouse}
-      logoutText={isRTL ? 'تسجيل الخروج' : 'Logout'}
-      onLogoutClick={handleLogout}
-      // Popover positioning adjusts for RTL automatically
-      popoverAlign={isRTL ? 'start' : 'end'}
-    />
-  );
-}
-```
-
-### Mobile RTL Behavior
-
-The TopBar handles mobile interactions properly in RTL:
-
-```jsx
-function MobileRTLTopBar() {
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const { isRTL } = useTheme();
-  
-  return (
-    <>
-      <TopBar
-        selectedWarehouse={isRTL ? 'مخزن الحرم الرئيسي' : 'Al Haram Warehouse'}
-        showHamburgerMenu={true}
-        isMobileSidebarOpen={isMobileSidebarOpen}
-        onHamburgerMenuClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-        // Mobile menu will slide from correct side automatically
-      />
-      
-      {/* Sidebar overlay behavior adjusts for RTL */}
-      {isMobileSidebarOpen && (
-        <div style={{
-          position: 'fixed',
-          top: '64px', // Below TopBar
-          [isRTL ? 'right' : 'left']: 0,
-          width: '280px',
-          height: 'calc(100vh - 64px)',
-          transform: `translateX(${isRTL ? '0' : '0'})`,
-          zIndex: 1000
-        }}>
-          <Sidebar selectedItem="dashboard" />
-        </div>
-      )}
-    </>
-  );
-}
-```
-
-### RTL Best Practices
-
-1. **Always use ThemeProvider** for proper RTL support and automatic font switching
-2. **Choose directional icons carefully** - use appropriate arrows for navigation actions
-3. **Test dropdown positioning** - ensure popovers align correctly in RTL layouts
-4. **Verify mobile menu behavior** - hamburger menu should slide from the correct side
-5. **Use proper warehouse names** - ensure Arabic warehouse names display correctly
-6. **Consider text length** - Arabic text may be longer/shorter than English equivalents
-7. **Test logo positioning** - ensure logo doesn't interfere with RTL text flow
-8. **Check custom listbox options** - verify all custom icons and text work in RTL
-9. **Validate logout text** - ensure logout appears in the correct language and position
-
-## Interactive Example
-
-<Canvas of={TopBarStories.Interactive} />
-
-```jsx
-const [selectedWarehouse, setSelectedWarehouse] = useState("Al Haram Warehouse");
-const warehouses = [
-  "Al Haram Warehouse",
-  "Main Distribution Center", 
-  "Secondary Storage",
-  "Emergency Depot",
-  "Overflow Facility"
-];
-
-<TopBar
-  selectedWarehouse={selectedWarehouse}
-  warehouses={warehouses}
-  logoClickable={true}
-  onWarehouseChange={setSelectedWarehouse}
-  onLogoClick={() => navigate('/')}
-  onHamburgerMenuClick={() => toggleSidebar()}
-  onLogoutClick={() => handleLogout()}
-/>
-```
-
-## Design System Integration
-
-### Visual Design Features
-
-- **TAGADDOD logo** integration with customizable sizing and click behavior
-- **Smooth transitions** with 300ms cubic-bezier animations
-- **Mobile hamburger menu** with icon transformation (hamburger ↔ X)
-- **Backdrop overlay** with fade animations for mobile sidebar
-- **RTL support** with proper text direction and layout adjustments
-
-### Customization Options
-
-#### Listbox Customization
-- `customListboxOptions` - Complete dropdown option override
-- `listboxClassName` - Custom styling for dropdown container
-- `listboxProps` - Additional props for listbox component
-- `onCustomListboxSelect` - Custom selection handler
-
-#### Popover Customization
-- `popoverSide` - Position (top/right/bottom/left)
-- `popoverAlign` - Alignment (start/center/end)
-- `popoverMargin` - Spacing from trigger
-- `showPopoverArrow` - Arrow visibility toggle
-- `popoverProps` - Additional popover properties
-
-#### Styling Customization
-- `warehouseTriggerClassName` - Custom trigger button styling
-- `hamburgerButtonClassName` - Custom hamburger button styling
-- `warehouseIcon` - Custom dropdown icon
-- `warehouseIconSize` - Icon size adjustment
+**Automatic RTL Adjustments:**
+- ✅ End section moves to left edge
+- ✅ Center section remains centered
+- ✅ Font switches to Arabic (Tajawal)
+- ✅ Line height adjusts for Arabic text
+- ✅ Mobile menu slides from correct side
 
 ## Accessibility
 
 - **ARIA Labels**: Proper labeling for screen readers
-- **Keyboard Navigation**: Full keyboard support for all interactive elements
-- **Focus Management**: Clear focus indicators and logical tab order
-- **Screen Reader Support**: Descriptive labels for warehouse selection and logout actions
-- **Mobile Accessibility**: Touch-friendly targets and gesture support
-
-## Form Integration
-
-The TopBar integrates with form systems through its selection handlers:
+- **Keyboard Navigation**: Full keyboard support
+- **Focus Management**: Clear focus indicators
+- **Mobile Touch Targets**: 44x44px minimum
 
 ```jsx
 <TopBar
-  selectedWarehouse={formData.warehouse}
-  onWarehouseChange={(warehouse) => setFormData({...formData, warehouse})}
-  onLogoutClick={() => handleFormReset()}
+  endContent={
+    <Button
+      variant="plain"
+      size="small"
+      prefixIcon={<IconBell size={18} />}
+      aria-label="Notifications - 3 unread"
+    >
+      3
+    </Button>
+  }
 />
 ```
 
-## Implementation Details
+## Complete Examples
 
-### CSS Variables
+### Dashboard TopBar
 
-The TopBar uses design system tokens for consistent theming:
+```jsx
+<TopBar
+  logoClickable={true}
+  onLogoClick={() => navigate('/')}
+
+  // Center: Search bar
+  showCenterSection={true}
+  showCenterSectionOnMobile={false}
+  centerContent={
+    <TextInput
+      placeholder="Search products, orders, customers..."
+      prefixIcon={<IconSearch size={18} />}
+      style={{
+        width: '100%',
+        maxWidth: '500px',
+        minWidth: '300px'
+      }}
+    />
+  }
+
+  // End: User profile
+  endContent={
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 'var(--t-space-300)'
+    }}>
+      <Button variant="plain" size="small" prefixIcon={<IconBell />}>
+        3
+      </Button>
+      <div style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '50%',
+        backgroundColor: 'var(--t-color-fill-brand-primary)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer'
+      }}>
+        JD
+      </div>
+    </div>
+  }
+
+  // Mobile expansion
+  mobileActionContent={<Button variant="plain" prefixIcon={<IconSearch />} />}
+  isExpanded={searchExpanded}
+  onExpandToggle={setSearchExpanded}
+  expandedContent={
+    <TextInput placeholder="Search..." autoFocus />
+  }
+/>
+```
+
+### E-commerce TopBar
+
+```jsx
+<TopBar
+  showCenterSection={true}
+  centerContent={
+    <div style={{
+      display: 'flex',
+      gap: 'var(--t-space-400)',
+      alignItems: 'center'
+    }}>
+      <Button variant="plain" size="small">Products</Button>
+      <Button variant="plain" size="small">Categories</Button>
+      <Button variant="plain" size="small">Deals</Button>
+    </div>
+  }
+
+  endContent={
+    <div style={{ display: 'flex', gap: 'var(--t-space-200)' }}>
+      <Button variant="plain" size="small" prefixIcon={<IconSearch />} />
+      <Button variant="plain" size="small" prefixIcon={<IconHeart />}>
+        12
+      </Button>
+      <Button variant="primary" size="small" prefixIcon={<IconShoppingCart />}>
+        5
+      </Button>
+    </div>
+  }
+/>
+```
+
+### Admin Panel TopBar
+
+```jsx
+<TopBar
+  showWarehouseDropdown={true}
+  selectedWarehouse="Main Warehouse"
+  warehouses={["Main Warehouse", "Secondary Warehouse", "Distribution Center"]}
+  onWarehouseChange={setWarehouse}
+  showLogoutOption={true}
+  logoutText="Sign Out"
+  onLogoutClick={handleLogout}
+
+  showCenterSection={true}
+  centerContent={
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 'var(--t-space-200)',
+      padding: '0 var(--t-space-400)',
+      backgroundColor: 'var(--t-color-fill-success-secondary)',
+      borderRadius: 'var(--t-border-radius-300)',
+      color: 'var(--t-color-text-success)',
+      height: '36px'
+    }}>
+      <div style={{
+        width: '8px',
+        height: '8px',
+        borderRadius: '50%',
+        backgroundColor: 'var(--t-color-icon-success)'
+      }} />
+      All Systems Online
+    </div>
+  }
+/>
+```
+
+## Implementation Notes
+
+### CSS Variables Used
 
 | Variable | Purpose |
 |----------|---------|
-| `--t-color-surface-primary` | TopBar background |
-| `--t-color-text-primary` | Primary text color |
-| `--t-color-text-critical` | Logout text color |
-| `--t-color-icon-critical` | Logout icon color |
-| `--t-color-border-secondary` | Border colors |
-| `--t-space-*` | Spacing and padding |
-| `--t-font-family-primary` | Font family |
-| `--t-line-height-arabic` | Arabic text line height |
-| `--t-border-radius-*` | Border radius |
-| `--t-duration-*` | Animation duration |
+| `--t-topbar-height` | TopBar height (56px / 3.5rem - fixed on all devices) |
+| `--t-color-surface-primary` | Background color |
+| `--t-color-text-primary` | Text color |
+| `--t-color-border-primary` | Border color |
+| `--t-space-*` | Spacing tokens |
+| `--t-border-radius-*` | Border radius tokens |
 
-### Mobile Behavior
+### Mobile Breakpoints
 
-1. **Hamburger Menu**: Shows on screens smaller than 768px
-2. **Icon Transformation**: Hamburger changes to X when sidebar is open
-3. **Overlay Sidebar**: Slides in from left (or right in RTL)
-4. **Backdrop**: Dark overlay with click-to-close functionality
-5. **Auto-close**: Sidebar closes when menu items are selected
+- **Desktop**: 1024px+
+- **Tablet**: 768px - 1024px
+- **Mobile**: < 768px
 
-### RTL Implementation
+### Performance
 
-The TopBar automatically detects RTL direction and applies:
-- Arabic font family for text elements
-- Proper line height for Arabic text
-- Mirrored layout positioning
-- Right-to-left sidebar slide animations
+- Lazy loading of Popover content
+- Efficient CSS transforms for animations
+- Minimal re-renders with optimized state
 
-### Browser Support
+## For AI Agents
 
-Compatible with all modern browsers including:
-- Chrome/Edge 88+
-- Firefox 85+
-- Safari 14+
-- Mobile browsers with touch support
+**📋 Read the complete implementation guide**: `TopBar-AI-AGENT-GUIDE.md`
 
-## Performance Considerations
+**Quick Decision Tree**:
+1. Just logo? → `<TopBar />`
+2. With search/nav? → Add `showCenterSection={true}` + `centerContent={...}`
+3. With user profile? → Add `endContent={...}`
+4. With warehouse example? → Add `showWarehouseDropdown={true}`
 
-- **Lazy Loading**: Popover content is rendered only when needed
-- **Efficient Animations**: CSS transforms for smooth mobile transitions
-- **Minimal Re-renders**: Optimized state management for responsive behavior
-- **Memory Management**: Proper cleanup of event listeners and animations
+**Remember**:
+- Default is empty (no center/end content)
+- Warehouse dropdown is optional example
+- Always use design tokens
+- Think mobile-first
+- Test responsive behavior
